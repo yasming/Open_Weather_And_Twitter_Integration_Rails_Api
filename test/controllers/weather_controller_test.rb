@@ -10,12 +10,23 @@ class WeatherControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'Weather could not be found', JSON.parse(response.body)['message']
   end
 
-  test "it should return an success message when the city is found" do
-    OpenWeatherIntegration.any_instance.stubs(:get_weather).returns("14.69°C and overcast clouds in London in 10/03/2022. Average of temperature for the next few days: 9.91°C em 11/03/2022, 11.29°C in 12/03/2022, 10.88°C in 13/03/2022, 12.6°C in 14/03/2022 e 11.69°C in 15/03/2022")
+  test "it should return an success message when the city is found and twitter comment were done" do
+    OpenWeatherIntegration.any_instance.stubs(:get_weather).returns('The weather preview were commented on twitter')
+    TwitterIntegration.any_instance.stubs(:comment).returns(true)
     post '/weather/1'
 
     assert_response :success
-    assert_equal '14.69°C and overcast clouds in London in 10/03/2022. Average of temperature for the next few days: 9.91°C em 11/03/2022, 11.29°C in 12/03/2022, 10.88°C in 13/03/2022, 12.6°C in 14/03/2022 e 11.69°C in 15/03/2022', JSON.parse(response.body)['message']
+    assert_equal 'The weather preview were commented on twitter', JSON.parse(response.body)['message']
   end
+
+  test "it should return an serror message if the weather could not be sent for twitter" do
+    OpenWeatherIntegration.any_instance.stubs(:get_weather).returns('The weather preview were commented on twitter')
+    TwitterIntegration.any_instance.stubs(:comment).returns(false)
+    post '/weather/1'
+
+    assert_response :unprocessable_entity
+    assert_equal 'Comment in twitter could to be done', JSON.parse(response.body)['message']
+  end
+
 
 end
