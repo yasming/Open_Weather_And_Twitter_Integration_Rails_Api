@@ -1,24 +1,48 @@
-# README
+# Open Weather and Tiwitter Integration
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This project is an API that integrates with open weather: https://openweathermap.org/ and twitter https://twitter.com/home, when the user send a request to the endpoint: weather/{city_id} , with a valid city id from open weather, it sends the weather as a commit in tweeter 
 
-Things you may want to cover:
+## Prerequisites
 
-* Ruby version
+```
+Ruby 2.7.3
+```
 
-* System dependencies
+```
+Twitter app: https://developer.twitter.com/en/portal/projects-and-apps
+```
 
-* Configuration
+### How to run project's locally
 
-* Database creation
+```
+cp .env.example .env (and populate .env with the right credentials from twitter and open weather)
+```
 
-* Database initialization
+```
+bundle install
+```
 
-* How to run the test suite
+```
+rails server
+```
 
-* Services (job queues, cache servers, search engines, etc.)
 
-* Deployment instructions
+## How to consume the project routes: 
 
-* ...
+
+- Get weather from open weather and publish on Twitter
+
+
+```
+POST localhost:3000/weather/2643743
+```
+
+```
+Response: 
+```
+
+```
+{
+    "message": "The weather preview were commented on twitter"
+}
+```
